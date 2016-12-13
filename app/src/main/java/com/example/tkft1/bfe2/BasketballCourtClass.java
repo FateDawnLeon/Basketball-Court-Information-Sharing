@@ -11,4 +11,10 @@ public class BasketballCourtClass {
     public LatLng Location;
     public String City;
     public String Address;
+    public String Distance;
+
+    @Override
+    public String toString() {
+        return CourtName + City + Address + Distance;
+    }
 }

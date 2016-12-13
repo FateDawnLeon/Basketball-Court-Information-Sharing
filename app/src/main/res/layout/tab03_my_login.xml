@@ -23,11 +23,13 @@
         android:drawableLeft="@android:drawable/ic_lock_lock" />
 
     <Button android:id="@+id/login"
+        android:onClick="onClick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login"/>
 
     <Button android:id="@+id/register"
+        android:onClick="onClick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/register"/>

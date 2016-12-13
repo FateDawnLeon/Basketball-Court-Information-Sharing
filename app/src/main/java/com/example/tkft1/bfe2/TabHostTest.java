@@ -5,38 +5,40 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.Toast;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.model.LatLngBounds;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
-import com.baidu.mapapi.search.poi.PoiBoundSearchOption;
 import com.baidu.mapapi.search.poi.PoiCitySearchOption;
+import com.baidu.mapapi.search.poi.PoiNearbySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiDetailSearchOption;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
+import com.baidu.mapapi.search.poi.PoiSortType;
 import com.baidu.mapapi.search.share.OnGetShareUrlResultListener;
 import com.baidu.mapapi.search.share.ShareUrlResult;
 import com.baidu.mapapi.search.share.ShareUrlSearch;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.widget.Toast;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -45,22 +47,23 @@ import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MyLocationData;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-
 
 public class TabHostTest extends Activity implements  View.OnClickListener{
-    static private boolean isclick = false;
-    static private boolean islogin = false;
+
     static private String username;
     static private String password;
-    static private TabHost th;
-    static private LayoutInflater i;
 
-    private TabSpec tab01;
+    private TabHost th;
+    private LayoutInflater i;
+
     private TabSpec tab02;
     private TabSpec tab03;
     private Intent intent;
+    private boolean isclick = false;
+    private Login login ;
+
+    private NewsList news = new NewsList();
+    private CourtList court = new CourtList();
 
     private boolean isFirstIn = true;
     private LocationClient mLocationClient;
@@ -113,31 +116,54 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
                 username = editText.getText().toString();
                 editText = (EditText)findViewById(R.id.password);
                 password = editText.getText().toString();
-                if (username.equals("admin") && password.equals("123456")){
-
-                    th.setCurrentTab(1);
-                    i.inflate(R.layout.tab03_my, th.getTabContentView());
-                    tab03.setContent(R.id.my);
-
-                    Button information = (Button)findViewById(R.id.my_information);
-                    Button news = (Button)findViewById(R.id.my_news);
-                    Button friends = (Button)findViewById(R.id.my_friends);
-
-                    information.setOnClickListener(this);
-                    news.setOnClickListener(this);
-                    friends.setOnClickListener(this);
-                    th.setCurrentTab(2);
-
-                    islogin = true;
+                if (!username.isEmpty() && !password.isEmpty()) {
+                    login = new Login(th,i,tab03);
+                    String[] s = new String[2];
+                    s[0] = username;
+                    s[1] = password;
+                    login.execute(s);
                 }
-                else
-                    islogin = false;
                 break;
 
             case R.id.register:
                 intent = new Intent();
                 intent.setClass(TabHostTest.this, tab03_my_register.class);
                 startActivity(intent);
+                break;
+
+            case R.id.courtlist_btn:
+                th.setCurrentTab(0);
+                if(!isclick)
+                {
+                    System.out.println(courtlist.get(0).CourtName);
+                    i.inflate(R.layout.tab02_vicinity_list, th.getTabContentView());
+                    court.getCourt(courtlist);
+                    SimpleAdapter adapter = new SimpleAdapter(this, court.getlist(), R.layout.tab02_vicinity_list_vlist,
+                            new String[]{"court_name","court_distance","court_position"},
+                            new int[]{R.id.court_name, R.id.court_distance, R.id.court_position});
+                    ListView lt = (ListView)findViewById(R.id.court_list);
+                    lt.setAdapter(adapter);
+
+                    lt.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            intent = new Intent();
+                            intent.putExtra("com.example.tkft1.bfe2.information",position);
+                            intent.setClass(TabHostTest.this, tab02_court_detail.class);
+                            startActivity(intent);
+                        }
+                    });
+
+                    isclick = true;
+                }
+                tab02.setContent(R.id.vicinity_list);
+                th.setCurrentTab(1);
+                break;
+
+            case R.id.court_bnt:
+                th.setCurrentTab(0);
+                tab02.setContent(R.id.vicinity);
+                th.setCurrentTab(1);
                 break;
 
             case R.id.my_information:
@@ -148,23 +174,6 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
                 intent.putExtra("com.example.tkft1.bfe2.information",informaion);
                 intent.setClass(TabHostTest.this, tab03_my_informaion.class);
                 startActivity(intent);
-                break;
-
-            case R.id.courtlist_btn:
-                th.setCurrentTab(0);
-                if(isclick == false)
-                {
-                    i.inflate(R.layout.tab02_vicinity_list, th.getTabContentView());
-                    isclick = true;
-                }
-                tab02.setContent(R.id.vicinity_list);
-                th.setCurrentTab(1);
-                break;
-
-            case R.id.court_btn:
-                th.setCurrentTab(0);
-                tab02.setContent(R.id.vicinity);
-                th.setCurrentTab(1);
                 break;
 
             case R.id.my_news:
@@ -232,7 +241,7 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
         i.inflate(R.layout.tab02_vicinity, th.getTabContentView());
         i.inflate(R.layout.tab03_my_login, th.getTabContentView());
 
-        tab01 = th.newTabSpec("tab01_news").setIndicator("动态");
+        TabSpec tab01 = th.newTabSpec("tab01_news").setIndicator("动态");
         tab02 = th.newTabSpec("tab02_vicinity").setIndicator("附近");
         tab03 = th.newTabSpec("tab03_my").setIndicator("我的");
 
@@ -240,17 +249,21 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
         th.addTab(tab02.setContent(R.id.vicinity));
         th.addTab(tab03.setContent(R.id.my_login));
 
-        SimpleAdapter adapter = new SimpleAdapter(this, getNews(), R.layout.tab01_news_vlist,
+        news.getNews();
+        SimpleAdapter adapter = new SimpleAdapter(this, news.getlist(), R.layout.tab01_news_vlist,
                 new String[]{"user","position","introduction"},
                 new int[]{R.id.user, R.id.position, R.id.introduction});
         ListView lt = (ListView)findViewById(R.id.newslist);
         lt.setAdapter(adapter);
-
-        Button login = (Button)findViewById(R.id.login);
-        Button register = (Button)findViewById(R.id.register);
-        login.setOnClickListener(this);
-        register.setOnClickListener(this);
-
+        lt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                intent = new Intent();
+                intent.putExtra("com.example.tkft1.bfe2.information",position);
+                intent.setClass(TabHostTest.this, tab01_new_detail.class);
+                startActivity(intent);
+            }
+        });
         th.setCurrentTab(1);
     }
 
@@ -273,6 +286,8 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
         poiSearch = PoiSearch.newInstance();
         // 设置检索监听器
         poiSearch.setOnGetPoiSearchResultListener(poiSearchListener);
+//        System.out.println("999999999999999999999999999999999999999999"+courtlist);
+//        System.out.println("1234"+courtlist.get(0).CourtName);
         editCityEt = (EditText) findViewById(R.id.city);
         editSearchKeyEt = (EditText) findViewById(R.id.searchkey);
 
@@ -315,14 +330,14 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
     OnGetPoiSearchResultListener poiSearchListener = new OnGetPoiSearchResultListener() {
         @Override
         public void onGetPoiResult(final PoiResult poiResult) {
-
+            System.out.println("1");
             if (poiResult == null
                     || poiResult.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {// 没有找到检索结果
                 Toast.makeText(TabHostTest.this, "未找到结果",
                         Toast.LENGTH_LONG).show();
                 return;
             }
-
+            System.out.println("2");
             if (poiResult.error == SearchResult.ERRORNO.NO_ERROR) {// 检索结果正常返回
                 bdMap.clear();
                 MyPoiOverlay poiOverlay = new MyPoiOverlay(bdMap);
@@ -337,41 +352,54 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
                         "总共查到" + poiResult.getTotalPoiNum() + "个兴趣点, 分为"
                                 + totalPage + "页", Toast.LENGTH_SHORT).show();
             }
-
+            System.out.println("3");
             sb.append("共搜索到").append(poiResult.getTotalPoiNum()).append("个POI/n");
             // 遍历当前页返回的POI（默认只返回10个）
             courtlist = new ArrayList<BasketballCourtClass>();
+            System.out.println("4");
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    DbHelper.getConnection();
+                    for (PoiInfo poiInfo : poiResult.getAllPoi()) {
+                        BasketballCourtClass newcourt = new BasketballCourtClass();
+                        newcourt.CourtName = poiInfo.name;
+                        newcourt.Location = poiInfo.location;
+                        newcourt.City = poiInfo.city;
+                        newcourt.Address = poiInfo.address;
 
+                        double d = GetShortDistance(longitude, latitude, poiInfo.location.longitude, poiInfo.location.latitude);;
+                        DecimalFormat df = new DecimalFormat("0.00");
+                        String DIStance = String.valueOf(df.format(d));
+                        newcourt.Distance = DIStance+"m";
+                        courtlist.add(newcourt);
 
-            Conn.getConnection();
-            for (PoiInfo poiInfo : poiResult.getAllPoi()) {
+                        sb.append("名称：").append(poiInfo.name).append("\n");
 
-                BasketballCourtClass newcourt = new BasketballCourtClass();
-                newcourt.CourtName = poiInfo.name;
-                newcourt.Location = poiInfo.location;
-                newcourt.City = poiInfo.city;
-                newcourt.Address = poiInfo.address;
-                courtlist.add(newcourt);
+                        String sql = "insert into basketballcourt values("
+                                +  "'"  +  newcourt.Address    +  "',"
+                                +  "'"  +  newcourt.City       +  "',"
+                                +  "'"  +  newcourt.CourtName  +  "',"
+                                +          newcourt.Location.latitude  + ","
+                                +          newcourt.Location.longitude + ");";
 
-                sb.append("名称：").append(poiInfo.name).append("\n");
-
-                Conn.excuteUpdate("insert into basketballcourt(Address,City,Name,Latitude,Longtitude) values("
-                        +  "'"  +  newcourt.Address    +  "',"
-                        +  "'"  +  newcourt.City       +  "',"
-                        +  "'"  +  newcourt.CourtName  +  "',"
-                        +          newcourt.Location.latitude  + ","
-                        +          newcourt.Location.longitude + ");");
-            }
-
-
-            new AlertDialog.Builder(TabHostTest.this)
-                    .setTitle("搜索到的POI信息")
-                    .setMessage(sb.toString())
-                    .setPositiveButton("关闭", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            dialog.dismiss();
-                        }
-                    }).create().show();
+                        DbHelper.excuteUpdate(sql);
+                    }
+                    DbHelper.close();
+                }
+            }).start();
+            System.out.println("5");
+//
+//            new AlertDialog.Builder(TabHostTest.this)
+//                    .setTitle("搜索到的POI信息")
+//                    .setMessage(sb.toString())
+//                    .setPositiveButton("关闭", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int whichButton) {
+//                            dialog.dismiss();
+//                        }
+//                    }).create().show();
 
 
         }
@@ -445,7 +473,9 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
         citySearchOption.pageCapacity(15);// 默认每页10条
         citySearchOption.pageNum(page);// 分页编号
         // 发起检索请求
+        System.out.println("!!!!!");
         poiSearch.searchInCity(citySearchOption);
+        System.out.println("!!!!!@@@@");
     }
 
     /**
@@ -454,15 +484,38 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
     private void boundSearch(int page) {
         initLocation();
 
-        PoiBoundSearchOption boundSearchOption = new PoiBoundSearchOption();
-        LatLng southwest = new LatLng(latitude - 0.01, longitude - 0.012);// 西南
-        LatLng northeast = new LatLng(latitude + 0.01, longitude + 0.012);// 东北
-        LatLngBounds bounds = new LatLngBounds.Builder().include(southwest)
-                .include(northeast).build();// 得到一个地理范围对象
-        boundSearchOption.bound(bounds);// 设置poi检索范围
-        boundSearchOption.keyword(editSearchKeyEt.getText().toString());// 检索关键字
-        boundSearchOption.pageNum(page);
-        poiSearch.searchInBound(boundSearchOption);// 发起poi范围检索请求
+        PoiNearbySearchOption nearbySearchOption = new PoiNearbySearchOption();
+        LatLng latlng = new LatLng(latitude, longitude);
+        nearbySearchOption.sortType(PoiSortType.distance_from_near_to_far);
+        nearbySearchOption.location(latlng);
+        nearbySearchOption.keyword(editSearchKeyEt.getText().toString());
+        nearbySearchOption.radius(5000);// 检索半径，单位是米
+        nearbySearchOption.pageNum(page);
+        poiSearch.searchNearby(nearbySearchOption);// 发起附近检索请求
+    }
+
+    public double GetShortDistance(double lon1, double lat1, double lon2, double lat2){
+        double ew1, ns1, ew2, ns2;
+        double dx, dy, dew;
+        double distance;
+        double DEF_PI = 3.14159265359; // PI
+        double DEF_2PI= 6.28318530712; // 2*PI
+        double DEF_PI180= 0.01745329252; // PI/180.0
+        double DEF_R =6370693.5; // radius of earth
+
+        ew1 = lon1 * DEF_PI180;
+        ns1 = lat1 * DEF_PI180;
+        ew2 = lon2 * DEF_PI180;
+        ns2 = lat2 * DEF_PI180;
+        dew = ew1 - ew2;
+        if (dew > DEF_PI)
+            dew = DEF_2PI - dew;
+        else if (dew < -DEF_PI)
+            dew = DEF_2PI + dew;
+        dx = DEF_R * Math.cos(ns1) * dew;
+        dy = DEF_R * (ns1 - ns2);
+        distance = Math.sqrt(dx * dx + dy * dy);
+        return distance;
     }
 
     @Override
@@ -507,38 +560,32 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
     private class MyLocationListener implements BDLocationListener
     {
         @Override
-        public void onReceiveLocation(BDLocation location)
-        {
+        public void onReceiveLocation(BDLocation location) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            double x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+            double x = longitude, y = latitude;
+            double z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * x_pi);
+            double theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * x_pi);
+            x = z * Math.cos(theta) + 0.0065;
+            y = z * Math.sin(theta) + 0.006;
+            longitude = x;
+            latitude = y;
+
             MyLocationData data = new MyLocationData.Builder()//
                     .accuracy(location.getRadius())//
-                    .latitude(location.getLatitude())//
-                    .longitude(location.getLongitude())//
+                    .latitude(latitude)//
+                    .longitude(longitude)//
                     .build();
             bdMap.setMyLocationData(data);
-            if (isFirstIn)
-            {
-                LatLng latLng = new LatLng(location.getLatitude(),
-                        location.getLongitude());
+            if (isFirstIn) {
+                LatLng latLng = new LatLng(latitude, longitude);
+
+                System.out.println("@@@@@@@@@@@@111111111" + latLng.latitude + "###########22222222" + latLng.longitude);
                 MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
                 bdMap.animateMapStatus(msu);
                 isFirstIn = false;
             }
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-
         }
-    }
-
-    private List<Map<String,Object>> getNews(){
-        List<Map<String, Object>> list = new ArrayList<>();
-        Map<String, Object> map;
-        for(int i=0; i<100; i++) {
-            map = new HashMap<>();
-            map.put("user", i+"");
-            map.put("position", "#");
-            map.put("introduction", "###");
-            list.add(map);
-        }
-        return list;
     }
 }

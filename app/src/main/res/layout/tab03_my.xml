@@ -6,16 +6,19 @@
     android:orientation="vertical">
 
     <Button android:id="@+id/my_information"
+        android:onClick="onClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/my_information"/>
 
     <Button android:id="@+id/my_news"
+        android:onClick="onClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/my_news"/>
 
     <Button android:id="@+id/my_friends"
+        android:onClick="onClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/my_friends"/>

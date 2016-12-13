@@ -16,7 +16,7 @@
                 android:maxHeight="60dp"
                 android:maxWidth="60dp"
                 android:scaleType="fitCenter"
-                android:src="@android:drawable/ic_lock_lock"
+                android:src="@drawable/man"
                 android:layout_weight="1" />
 
             <TableLayout android:layout_weight="1">

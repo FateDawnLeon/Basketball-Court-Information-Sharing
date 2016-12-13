@@ -58,6 +58,11 @@
             android:label="@string/my_news"/>
         <activity android:name=".tab03_my_friends"
             android:label="@string/my_friends"/>
+        <activity android:name=".tab01_new_detail"
+            android:label="动态详情"/>
+        <activity android:name=".tab02_court_detail"
+            android:label="球场详情"/>
+
 
 
         <service
