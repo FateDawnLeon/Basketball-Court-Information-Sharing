@@ -51,7 +51,8 @@
         android:layout_width="fill_parent"
         android:layout_height="50dip"
         android:layout_below="@id/poi_search_condition"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout">
 
         <Button
             android:id="@+id/city_search_btn"
@@ -80,5 +81,15 @@
         android:layout_alignParentRight="true"
         android:padding="10dip"
         android:text="下一组数据" />
+
+    <Button
+        android:text="场地列表"
+        android:onClick="onClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/courtlist_btn"
+        android:layout_above="@+id/next_data_btn"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

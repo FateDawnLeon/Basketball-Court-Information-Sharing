@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/my_login"
+    android:id="@+id/my_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -12,7 +12,12 @@
         android:hint="@string/login_hint_account"
         android:inputType="text"
         android:selectAllOnFocus="true"
-        android:drawableLeft="@android:drawable/btn_star_big_on"/>
+        android:drawableLeft="@drawable/abc_btn_check_to_on_mtrl_015"/>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </TableRow>
 
     <EditText
         android:id="@+id/password"
@@ -22,10 +27,31 @@
         android:hint="@string/login_hint_password"
         android:drawableLeft="@android:drawable/ic_lock_lock" />
 
-    <Button android:id="@+id/login"
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </TableRow>
+
+    <EditText
+        android:id="@+id/confirm_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login"/>
+        android:inputType="textPassword"
+        android:hint="@string/login_hint_confirm_password"
+        android:drawableLeft="@android:drawable/ic_lock_lock" />
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </TableRow>
+
+    <EditText
+        android:id="@+id/identifying_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textCapWords"
+        android:hint="@string/login_hint_identifying_code"
+        android:drawableLeft="@android:drawable/ic_menu_crop" />
 
     <Button android:id="@+id/register"
         android:layout_width="match_parent"

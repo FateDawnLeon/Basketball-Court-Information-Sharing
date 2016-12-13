@@ -38,7 +38,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="Me1GWCrbvrGqbRxITlHjqBEI4BO6VG13" />
+            android:value="8ZTPK4O7zcT4sulOp4SXRNCfGF9zL23Y" />
 
 
 
@@ -52,6 +52,13 @@
 
         <activity android:name=".tab03_my_informaion"
             android:label="@string/my_information"/>
+        <activity android:name=".tab03_my_register"
+            android:label="@string/my_register"/>
+        <activity android:name=".tab03_my_news"
+            android:label="@string/my_news"/>
+        <activity android:name=".tab03_my_friends"
+            android:label="@string/my_friends"/>
+
 
         <service
             android:name="com.baidu.location.f"

@@ -13,8 +13,8 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
@@ -29,20 +29,13 @@ import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiDetailSearchOption;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
-import com.baidu.mapapi.search.poi.PoiNearbySearchOption;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.share.OnGetShareUrlResultListener;
 import com.baidu.mapapi.search.share.ShareUrlResult;
 import com.baidu.mapapi.search.share.ShareUrlSearch;
-import android.app.Activity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -51,18 +44,23 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MyLocationData;
-import java.util.HashMap;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
 
 public class TabHostTest extends Activity implements  View.OnClickListener{
+    static private boolean isclick = false;
     static private boolean islogin = false;
     static private String username;
     static private String password;
     static private TabHost th;
     static private LayoutInflater i;
+
     private TabSpec tab01;
     private TabSpec tab02;
     private TabSpec tab03;
-
+    private Intent intent;
 
     private boolean isFirstIn = true;
     private LocationClient mLocationClient;
@@ -73,6 +71,7 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
     private ShareUrlSearch shareUrlSearch;
     private EditText editCityEt, editSearchKeyEt;
 
+
     // 城市检索，区域检索，周边检索，下一组数据 按钮
     private Button citySearchBtn, boundSearchBtn, nextDataBtn;
 
@@ -81,9 +80,13 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
     // 记录页标
     private int page = 1;
     private int totalPage = 0;
-
     private double latitude;
     private double longitude;
+
+    //1127
+    private static StringBuilder sb;
+    private ArrayList<BasketballCourtClass> courtlist;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -93,6 +96,7 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
         th = (TabHost)findViewById(R.id.home);
         th.setup();
         i = LayoutInflater.from(this);
+
         initTabHost();
 
         init();
@@ -101,6 +105,7 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
 
     @Override
     public void onClick(View v) {
+        sb = new StringBuilder();
         switch(v.getId())
         {
             case R.id.login:
@@ -108,7 +113,7 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
                 username = editText.getText().toString();
                 editText = (EditText)findViewById(R.id.password);
                 password = editText.getText().toString();
-                if (username.equals("godchen") && password.equals("123456")){
+                if (username.equals("admin") && password.equals("123456")){
 
                     th.setCurrentTab(1);
                     i.inflate(R.layout.tab03_my, th.getTabContentView());
@@ -130,54 +135,70 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
                 break;
 
             case R.id.register:
+                intent = new Intent();
+                intent.setClass(TabHostTest.this, tab03_my_register.class);
+                startActivity(intent);
                 break;
+
             case R.id.my_information:
-                Intent intent = new Intent();
-                ArrayList<String> informaion = new ArrayList<String>();
+                intent = new Intent();
+                ArrayList<String> informaion = new ArrayList<>();
                 informaion.add(username);
                 informaion.add(password);
                 intent.putExtra("com.example.tkft1.bfe2.information",informaion);
                 intent.setClass(TabHostTest.this, tab03_my_informaion.class);
                 startActivity(intent);
                 break;
+
+            case R.id.courtlist_btn:
+                th.setCurrentTab(0);
+                if(isclick == false)
+                {
+                    i.inflate(R.layout.tab02_vicinity_list, th.getTabContentView());
+                    isclick = true;
+                }
+                tab02.setContent(R.id.vicinity_list);
+                th.setCurrentTab(1);
+                break;
+
+            case R.id.court_btn:
+                th.setCurrentTab(0);
+                tab02.setContent(R.id.vicinity);
+                th.setCurrentTab(1);
+                break;
+
             case R.id.my_news:
-
+                intent = new Intent();
+                intent.setClass(TabHostTest.this, tab03_my_news.class);
+                startActivity(intent);
                 break;
+
             case R.id.my_friends:
-
+                intent = new Intent();
+                intent.setClass(TabHostTest.this, tab03_my_friends.class);
+                startActivity(intent);
                 break;
+
             case R.id.city_search_btn:
                 type = 0;
                 page = 1;
                 citySearchBtn.setEnabled(true);
                 boundSearchBtn.setEnabled(true);
-                //nearbySearchBtn.setEnabled(true);
                 nextDataBtn.setEnabled(true);
                 bdMap.clear();
                 citySearch(page);
                 break;
+
             case R.id.bound_search_btn:
                 type = 1;
                 page = 1;
                 citySearchBtn.setEnabled(true);
                 boundSearchBtn.setEnabled(true);
-                //nearbySearchBtn.setEnabled(true);
                 nextDataBtn.setEnabled(true);
                 bdMap.clear();
                 boundSearch(page);
                 break;
-            /**
-            case R.id.nearby_search_btn:
-                type = 2;
-                page = 1;
-                citySearchBtn.setEnabled(true);
-                boundSearchBtn.setEnabled(true);
-                nearbySearchBtn.setEnabled(true);
-                nextDataBtn.setEnabled(true);
-                bdMap.clear();
-                nearbySearch(page);
-                break;
-             **/
+
             case R.id.next_data_btn:
                 switch (type) {
                     case 0:
@@ -196,18 +217,11 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
                                     Toast.LENGTH_SHORT).show();
                         }
                         break;
-                    /**
-                    case 2:
-                        if (++page <= totalPage) {
-                            nearbySearch(page);
-                        } else {
-                            Toast.makeText(TabHostTest.this, "已经查到了最后一页~",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                    default:
                         break;
-                     **/
                 }
                 break;
+
             default:
                 break;
         }
@@ -264,12 +278,10 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
 
         citySearchBtn = (Button) findViewById(R.id.city_search_btn);
         boundSearchBtn = (Button) findViewById(R.id.bound_search_btn);
-        //nearbySearchBtn = (Button) findViewById(R.id.nearby_search_btn);
         nextDataBtn = (Button) findViewById(R.id.next_data_btn);
         nextDataBtn.setEnabled(false);
         citySearchBtn.setOnClickListener(this);
         boundSearchBtn.setOnClickListener(this);
-        //nearbySearchBtn.setOnClickListener(this);
         nextDataBtn.setOnClickListener(this);
 
         editSearchKeyEt.addTextChangedListener(new TextWatcher() {
@@ -279,7 +291,6 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
                                       int count) {
                 citySearchBtn.setEnabled(true);
                 boundSearchBtn.setEnabled(true);
-                //nearbySearchBtn.setEnabled(true);
                 nextDataBtn.setEnabled(false);
                 page = 1;
                 totalPage = 0;
@@ -301,12 +312,10 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
 
     }
 
-    /**
-     *
-     */
     OnGetPoiSearchResultListener poiSearchListener = new OnGetPoiSearchResultListener() {
         @Override
-        public void onGetPoiResult(PoiResult poiResult) {
+        public void onGetPoiResult(final PoiResult poiResult) {
+
             if (poiResult == null
                     || poiResult.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {// 没有找到检索结果
                 Toast.makeText(TabHostTest.this, "未找到结果",
@@ -327,8 +336,44 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
                         TabHostTest.this,
                         "总共查到" + poiResult.getTotalPoiNum() + "个兴趣点, 分为"
                                 + totalPage + "页", Toast.LENGTH_SHORT).show();
-
             }
+
+            sb.append("共搜索到").append(poiResult.getTotalPoiNum()).append("个POI/n");
+            // 遍历当前页返回的POI（默认只返回10个）
+            courtlist = new ArrayList<BasketballCourtClass>();
+
+
+            Conn.getConnection();
+            for (PoiInfo poiInfo : poiResult.getAllPoi()) {
+
+                BasketballCourtClass newcourt = new BasketballCourtClass();
+                newcourt.CourtName = poiInfo.name;
+                newcourt.Location = poiInfo.location;
+                newcourt.City = poiInfo.city;
+                newcourt.Address = poiInfo.address;
+                courtlist.add(newcourt);
+
+                sb.append("名称：").append(poiInfo.name).append("\n");
+
+                Conn.excuteUpdate("insert into basketballcourt(Address,City,Name,Latitude,Longtitude) values("
+                        +  "'"  +  newcourt.Address    +  "',"
+                        +  "'"  +  newcourt.City       +  "',"
+                        +  "'"  +  newcourt.CourtName  +  "',"
+                        +          newcourt.Location.latitude  + ","
+                        +          newcourt.Location.longitude + ");");
+            }
+
+
+            new AlertDialog.Builder(TabHostTest.this)
+                    .setTitle("搜索到的POI信息")
+                    .setMessage(sb.toString())
+                    .setPositiveButton("关闭", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.dismiss();
+                        }
+                    }).create().show();
+
+
         }
 
         @Override
@@ -420,21 +465,6 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
         poiSearch.searchInBound(boundSearchOption);// 发起poi范围检索请求
     }
 
-    /**
-     * 附近检索
-     */
-    /**
-    private void nearbySearch(int page) {
-        initLocation();
-
-        PoiNearbySearchOption nearbySearchOption = new PoiNearbySearchOption();
-        nearbySearchOption.location(new LatLng(latitude, longitude));
-        nearbySearchOption.keyword(editSearchKeyEt.getText().toString());
-        nearbySearchOption.radius(1000);// 检索半径，单位是米
-        nearbySearchOption.pageNum(page);
-        poiSearch.searchNearby(nearbySearchOption);// 发起附近检索请求
-    }
-**/
     @Override
     protected void onResume() {
         super.onResume();
@@ -509,27 +539,6 @@ public class TabHostTest extends Activity implements  View.OnClickListener{
             map.put("introduction", "###");
             list.add(map);
         }
-
-        /**
-        List<Map<String, Object>> list = new ArrayList<>();
-        Map<String, Object> map = new HashMap<>();
-        map.put("user", "godchen");
-        map.put("position", "harbin");
-        map.put("introduction", "好开心啊");
-        list.add(map);
-
-        map = new HashMap<>();
-        map.put("user", "godliu");
-        map.put("position", "harbin");
-        map.put("introduction", "好开心啊");
-        list.add(map);
-
-        map = new HashMap<>();
-        map.put("user", "godzhang");
-        map.put("position", "harbin");
-        map.put("introduction", "好开心啊");
-        list.add(map);
-**/
         return list;
     }
 }
