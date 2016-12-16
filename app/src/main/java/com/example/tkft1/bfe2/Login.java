@@ -42,6 +42,7 @@ public class Login extends AsyncTask<String, Integer, Boolean>{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        DbHelper.close();
         islogin = false;
         return false;
     }

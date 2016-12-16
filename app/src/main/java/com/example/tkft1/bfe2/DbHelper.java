@@ -9,9 +9,12 @@ import java.sql.Statement;
 public class DbHelper {
     private static Connection conn;
     private static final String driver = "com.mysql.jdbc.Driver";
+//    private static final String username = "root";
+//    private static final String password = "leonhitcx";
+//    private static final String url = "jdbc:mysql://10.0.2.2:3306/bcis";
     private static final String username = "root";
-    private static final String password = "leonhitcx";
-    private static final String url = "jdbc:mysql://10.0.2.2/bcis";
+    private static final String password = "123456";
+    private static final String url = "jdbc:mysql://123.206.28.100:3306/bcis";
 
     public static void getConnection() {
         try {

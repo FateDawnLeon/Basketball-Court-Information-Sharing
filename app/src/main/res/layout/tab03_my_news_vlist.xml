@@ -11,25 +11,28 @@
         android:orientation="horizontal">
         <TableRow>
             <TextView
-                android:layout_marginLeft="10px"
-                android:textSize="30dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="30sp"
                 android:id="@+id/user"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="123"/>
             <TextView
-                android:layout_marginLeft="100px"
-                android:textSize="15dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="15sp"
                 android:id="@+id/position"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="456"/>
         </TableRow>
 
         <TextView
-            android:layout_marginLeft="20px"
-            android:textSize="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="20sp"
             android:id="@+id/introduction"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="789"/>
 
     </TableLayout>
 </LinearLayout>

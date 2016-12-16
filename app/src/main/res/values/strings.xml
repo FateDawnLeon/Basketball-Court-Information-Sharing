@@ -18,7 +18,27 @@
         <string name="my_register">注册信息</string>
         <string name="my_news">我的动态</string>
         <string name="my_friends">我的好友</string>
+        <string name="news_sharing">发布动态</string>
 
-        <string name="back">返回</string>
 
+    <string name="back">返回</string>
+		
+		<!--1214-->
+		<!-- 驾车路线策略 -->
+		<string-array name="driving_spinner">
+			<item>躲避拥堵</item>
+			<item>最短距离</item>
+			<item>较少费用</item>
+			<item>时间优先</item>
+		</string-array>
+		
+		<!-- 换乘策略 -->
+		<string-array name="transit_spinner">
+			<item>不含地铁</item>
+			<item>时间优先</item>
+			<item>最少换乘</item>
+			<item>最少步行距离</item>
+		</string-array>
+		<!--1214-->
+		
 </resources>

@@ -14,12 +14,14 @@ public class CourtList {
 
     public List<Map<String,Object>> getCourt(ArrayList<BasketballCourtClass> ar){
         Map<String, Object> map = new HashMap<>();
+        list.clear();
 
         for(int i=0; i<ar.size(); i++) {
             map = new HashMap<>();
             map.put("court_name", ar.get(i).CourtName);
             map.put("court_distance", ar.get(i).Distance);
             map.put("court_position", ar.get(i).Address);
+            map.put("court_city",ar.get(i).City);
             list.add(map);
         }
 

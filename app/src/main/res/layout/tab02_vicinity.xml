@@ -41,9 +41,9 @@
 
         <AutoCompleteTextView
             android:id="@+id/searchkey"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.88"
+            android:layout_weight="1"
             android:text="篮球场" />
     </LinearLayout>
 
@@ -79,6 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:padding="10dip"
         android:text="下一组数据" />
 

@@ -50,6 +50,8 @@
             </intent-filter>
         </activity>
 
+
+
         <activity android:name=".tab03_my_informaion"
             android:label="@string/my_information"/>
         <activity android:name=".tab03_my_register"
@@ -62,6 +64,10 @@
             android:label="动态详情"/>
         <activity android:name=".tab02_court_detail"
             android:label="球场详情"/>
+        <activity android:name=".RoutePlanningActivity"
+            android:label="去这里"/>
+        <activity android:name=".tab03_news_sharing"
+            android:label="动态发布"/>
 
 
 

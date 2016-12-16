@@ -37,33 +37,26 @@ public class tab03_my_register extends Activity implements ViewStub.OnClickListe
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("11111111111111111111111111111");
                         DbHelper.getConnection();
-                        System.out.println("222222222222222222222222222222");
                         String sql = "select * from userinfo where username='" + username +"';";
                         ResultSet rs = DbHelper.excuteQuery(sql);
-                        System.out.println("333333333333333333333333333333");
                         try {
                             if (rs.next()) {
-                                System.out.println("44444444444444444444444444444444");
-                                editText_username.setText("");
-                                Toast.makeText(getApplicationContext(), "此用戶名已存在！", Toast.LENGTH_SHORT).show();
+//                                editText_username.setText("");
+//                                Toast.makeText(getApplicationContext(), "此用戶名已存在！", Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                System.out.println("555555555555555555555555555555555");
                                 String sql2 = String.format("insert into userinfo(username,password) values('%s','%s')",username,password);
                                 boolean flag = DbHelper.excuteUpdate(sql2);
                                 if (flag) {
                                     System.out.println("insert success!");
-//                                    Toast.makeText(tab03_my_register.this, "註冊成功！", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
                                     System.out.println("insert failure!");
-//                                    Toast.makeText(tab03_my_register.this, "註冊失敗！", Toast.LENGTH_SHORT).show();
                                 }
-                                editText_username.setText("");
-                                editText_password1.setText("");
-                                editText_password2.setText("");
+//                                editText_username.setText("");
+//                                editText_password1.setText("");
+//                                editText_password2.setText("");
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
