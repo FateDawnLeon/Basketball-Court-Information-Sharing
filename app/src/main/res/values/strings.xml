@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">bfe2</string>
+
+        <string name="tab01">动态</string>
+        <string name="tab02">附近</string>
+        <string name="tab03">我的</string>
+
+        <string name="account">用户名:</string>
+        <string name="password">密码:</string>
+        <string name="login">登录</string>
+        <string name="register">注册</string>
+        <string name="login_hint_account">请填写帐号</string>
+        <string name="login_hint_password">请输入密码</string>
+        <string name="login_hint_confirm_password">请确认密码</string>
+        <string name="login_hint_identifying_code">请输入验证码</string>
+
+        <string name="my_information">我的信息</string>
+        <string name="my_register">注册信息</string>
+        <string name="my_news">我的动态</string>
+        <string name="my_friends">我的好友</string>
+        <string name="news_sharing">发布动态</string>
+
+
+    <string name="back">返回</string>
+		
+		<!--1214-->
+		<!-- 驾车路线策略 -->
+		<string-array name="driving_spinner">
+			<item>躲避拥堵</item>
+			<item>最短距离</item>
+			<item>较少费用</item>
+			<item>时间优先</item>
+		</string-array>
+		
+		<!-- 换乘策略 -->
+		<string-array name="transit_spinner">
+			<item>不含地铁</item>
+			<item>时间优先</item>
+			<item>最少换乘</item>
+			<item>最少步行距离</item>
+		</string-array>
+		<!--1214-->
+		
+</resources>

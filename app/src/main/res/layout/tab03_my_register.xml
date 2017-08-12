@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my_register"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/login_hint_account"
+        android:inputType="text"
+        android:selectAllOnFocus="true"
+        android:drawableLeft="@android:drawable/btn_star_big_on"/>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </TableRow>
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="@string/login_hint_password"
+        android:drawableLeft="@android:drawable/ic_lock_lock" />
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </TableRow>
+
+    <EditText
+        android:id="@+id/confirm_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="@string/login_hint_confirm_password"
+        android:drawableLeft="@android:drawable/ic_lock_lock" />
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </TableRow>
+
+    <Button android:id="@+id/register"
+        android:onClick="onClick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/register"/>
+
+
+</TableLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:id="@+id/vicinity_list">
+
+    <Button android:id="@+id/court_bnt"
+        android:onClick="onClick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="地图"/>
+
+    <ListView
+        android:id="@+id/court_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</TableLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/my_information"
+        android:onClick="onClick"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/my_information"
+        android:textSize="40sp"
+        />
+
+    <Button android:id="@+id/my_news"
+        android:onClick="onClick"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/my_news"
+        android:textSize="40sp"
+        />
+
+    <Button android:id="@+id/my_friends"
+        android:onClick="onClick"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/my_friends"
+        android:textSize="40sp"
+        />
+
+    <Button
+        android:id="@+id/news_sharing_btn"
+        android:onClick="onClick"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/news_sharing"
+        android:textSize="40sp"
+        />
+
+</LinearLayout>
